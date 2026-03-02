@@ -24,7 +24,6 @@ module_app_bundles() {
         return 0
     fi
 
-    packages_detect
 
     local bundle
     while IFS= read -r bundle; do
