@@ -31,6 +31,7 @@ module_aesthetics() {
 
     core_log_info "Applying theme=${theme}, waybar=${waybar_layout}, rofi=${rofi_style}"
 
+    _aesthetics_apply_sway
     _aesthetics_install_fonts
     _aesthetics_apply_waybar "${waybar_layout}"
     _aesthetics_apply_rofi   "${rofi_style}"
@@ -90,6 +91,19 @@ _aesthetics_apply_rofi() {
 
     if [[ ! -f "${src}" ]]; then
         core_log_warn "Rofi theme not found: ${src}"
+        return 0
+    fi
+
+    core_safe_symlink "${src}" "${dest}"
+}
+
+# ── Deploy Sway master config ─────────────────────────────────────────────────
+_aesthetics_apply_sway() {
+    local src="${CONFIGS_DIR}/sway/config"
+    local dest="${HOME}/.config/sway/config"
+
+    if [[ ! -f "${src}" ]]; then
+        core_log_warn "Sway config not found: ${src}"
         return 0
     fi
 
