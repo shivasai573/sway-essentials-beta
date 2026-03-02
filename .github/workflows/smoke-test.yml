@@ -1,0 +1,105 @@
+name: Smoke Test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Syntax-check shell scripts (bash -n)
+        run: |
+          errors=0
+          mapfile -t scripts < <(
+            find . -name "*.sh" -not -path "./.git/*"
+            find . -type f -not -name "*.sh" -not -path "./.git/*" \
+              -exec grep -lE '^#!.*\b(bash|sh)\b' {} +
+          )
+
+          if [[ ${#scripts[@]} -eq 0 ]]; then
+            echo "No shell scripts found — skipping syntax check."
+            exit 0
+          fi
+
+          for script in "${scripts[@]}"; do
+            if bash -n "${script}"; then
+              echo "  OK  ${script}"
+            else
+              echo "  FAIL ${script}"
+              errors=$(( errors + 1 ))
+            fi
+          done
+
+          if [[ ${errors} -gt 0 ]]; then
+            echo "${errors} script(s) failed syntax check."
+            exit 1
+          fi
+          echo "All shell scripts passed syntax check."
+
+      - name: Verify key config files exist
+        run: |
+          missing=0
+          check_file() {
+            if [[ -f "$1" ]]; then
+              echo "  FOUND  $1"
+            else
+              echo "  MISSING $1"
+              missing=$(( missing + 1 ))
+            fi
+          }
+
+          check_file "install.sh"
+          check_file "lib/core.sh"
+          check_file "lib/ui.sh"
+          check_file "lib/backup.sh"
+          check_file "lib/packages.sh"
+          check_file "lib/aesthetics.sh"
+          check_file "lib/hardware.sh"
+          check_file "lib/power.sh"
+          check_file "lib/bundles.sh"
+          check_file "lib/dotfiles.sh"
+          check_file "configs/sway/config"
+          check_file "configs/sway/input-laptop.conf"
+          check_file "configs/environment.d/wayland.conf"
+          check_file "configs/rofi/catppuccin.rasi"
+          check_file "configs/rofi/nord.rasi"
+          check_file "configs/waybar/minimal-top/config.jsonc"
+          check_file "configs/waybar/minimal-top/style.css"
+          check_file "configs/waybar/floating-bottom/config.jsonc"
+          check_file "configs/waybar/floating-bottom/style.css"
+          check_file "configs/fonts/manifest.txt"
+
+          if [[ ${missing} -gt 0 ]]; then
+            echo "${missing} expected file(s) are missing from the repository."
+            exit 1
+          fi
+          echo "All expected config files are present."
+
+      - name: Check scripts are executable
+        run: |
+          not_executable=0
+          mapfile -t scripts < <(
+            find . -name "*.sh" -not -path "./.git/*"
+            find . -type f -not -name "*.sh" -not -path "./.git/*" \
+              -exec grep -lE '^#!.*\b(bash|sh)\b' {} +
+          )
+
+          for script in "${scripts[@]}"; do
+            if [[ -x "${script}" ]]; then
+              echo "  EXEC  ${script}"
+            else
+              echo "  NOT EXEC  ${script}"
+              not_executable=$(( not_executable + 1 ))
+            fi
+          done
+
+          if [[ ${not_executable} -gt 0 ]]; then
+            echo "WARNING: ${not_executable} script(s) are not executable. Consider running: chmod +x <script>"
+          fi
+          # Report only; do not fail (executability may be set at runtime).

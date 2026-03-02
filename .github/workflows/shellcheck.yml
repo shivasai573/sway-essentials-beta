@@ -1,0 +1,41 @@
+name: ShellCheck
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ShellCheck
+        run: |
+          if ! command -v shellcheck &>/dev/null; then
+            sudo apt-get update -qq
+            sudo apt-get install -y shellcheck
+          fi
+          shellcheck --version
+
+      - name: Find and lint shell scripts
+        run: |
+          mapfile -t scripts < <(
+            # Find by .sh extension
+            find . -name "*.sh" -not -path "./.git/*"
+            # Find by shebang (bash/sh) for extensionless scripts
+            find . -type f -not -name "*.sh" -not -path "./.git/*" \
+              -exec grep -lE '^#!.*\b(bash|sh)\b' {} +
+          )
+
+          if [[ ${#scripts[@]} -eq 0 ]]; then
+            echo "No shell scripts found — nothing to lint."
+            exit 0
+          fi
+
+          echo "Linting ${#scripts[@]} shell script(s):"
+          printf '  %s\n' "${scripts[@]}"
+          shellcheck --severity=warning "${scripts[@]}"
