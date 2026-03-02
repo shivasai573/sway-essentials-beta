@@ -38,7 +38,7 @@ git clone https://github.com/shivasai573/sway-essentials-beta.git
 cd sway-essentials-beta
 
 # Make the installer executable
-chmod +x install.sh scripts/detect-pkg-manager.sh
+chmod +x install.sh
 
 # Run
 ./install.sh
@@ -87,13 +87,14 @@ lib/
   core.sh                     # Logging, safe copy/symlink helpers
   ui.sh                       # gum TUI wrappers
   backup.sh                   # .graveyard backup & restore
-  packages.sh                 # Package manager abstraction
+  packages.sh                 # Package manager abstraction & detection
   aesthetics.sh               # Theme / Waybar / Rofi module
   hardware.sh                 # Laptop detection & input tuning
   power.sh                    # Power daemon installation
   bundles.sh                  # App bundle installation
   dotfiles.sh                 # Custom dotfiles integration
 configs/
+  environment.d/wayland.conf  # Wayland environment variables for systemd user session
   sway/config                 # Base Sway config template
   sway/input-laptop.conf      # Laptop input overrides
   waybar/minimal-top/         # Minimal top bar layout
@@ -102,8 +103,6 @@ configs/
   rofi/nord.rasi              # Nord Rofi theme
   fonts/manifest.txt          # Recommended fonts
   wallpapers/                 # Place wallpapers here (not tracked by git)
-scripts/
-  detect-pkg-manager.sh       # Distro package manager detection
 ```
 
 ---
