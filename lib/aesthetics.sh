@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # lib/aesthetics.sh — Aesthetic Engine module.
-# Handles theme selection, Waybar layout, and Rofi style.
+# Handles theme selection, Waybar layout, Rofi style, and font installation.
 # Sourced by install.sh; not executed directly.
 
 module_aesthetics() {
@@ -28,10 +28,40 @@ module_aesthetics() {
 
     core_log_info "Applying theme=${theme}, waybar=${waybar_layout}, rofi=${rofi_style}"
 
+    _aesthetics_install_fonts
     _aesthetics_apply_waybar "${waybar_layout}"
     _aesthetics_apply_rofi   "${rofi_style}"
 
+    # Live reload — update the running Sway session immediately
+    swaymsg reload >/dev/null 2>&1 || true
+
     core_log_info "Aesthetic Engine complete."
+}
+
+# ── Install Nerd Fonts (JetBrainsMono) ───────────────────────────────────────
+_aesthetics_install_fonts() {
+    local font_dir="${HOME}/.local/share/fonts/JetBrainsMono"
+    local zip_url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
+    local tmp_zip
+    tmp_zip="$(mktemp /tmp/JetBrainsMono-XXXXXX.zip)"
+
+    core_log_info "Downloading JetBrainsMono Nerd Font…"
+    if ! curl -fsSL "${zip_url}" -o "${tmp_zip}"; then
+        core_log_warn "Failed to download JetBrainsMono font; skipping."
+        rm -f "${tmp_zip}"
+        return 0
+    fi
+
+    mkdir -p "${font_dir}"
+    if ! unzip -o "${tmp_zip}" -d "${font_dir}" >/dev/null; then
+        core_log_warn "Failed to unzip JetBrainsMono font; skipping."
+        rm -f "${tmp_zip}"
+        return 0
+    fi
+
+    rm -f "${tmp_zip}"
+    fc-cache -f >/dev/null 2>&1
+    core_log_info "JetBrainsMono Nerd Font installed to ${font_dir}"
 }
 
 # ── Apply Waybar config ───────────────────────────────────────────────────────
@@ -45,8 +75,8 @@ _aesthetics_apply_waybar() {
         return 0
     fi
 
-    core_safe_copy "${src_dir}/config.jsonc" "${dest_dir}/config.jsonc"
-    core_safe_copy "${src_dir}/style.css"    "${dest_dir}/style.css"
+    core_safe_symlink "${src_dir}/config.jsonc" "${dest_dir}/config.jsonc"
+    core_safe_symlink "${src_dir}/style.css"    "${dest_dir}/style.css"
 }
 
 # ── Apply Rofi theme ──────────────────────────────────────────────────────────
@@ -60,5 +90,5 @@ _aesthetics_apply_rofi() {
         return 0
     fi
 
-    core_safe_copy "${src}" "${dest}"
+    core_safe_symlink "${src}" "${dest}"
 }
