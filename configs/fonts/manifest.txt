@@ -1,0 +1,9 @@
+# configs/fonts/manifest.txt
+# Fonts used / recommended by Sway Essentials.
+# Install these for the best visual experience.
+#
+# Format: <font-name> | <package-name (apt/dnf/pacman)> | <notes>
+
+JetBrains Mono     | fonts-jetbrains-mono / jetbrains-mono-fonts / ttf-jetbrains-mono | Primary monospace font
+Nerd Fonts (JBM)   | ttf-jetbrains-mono-nerd (AUR) / manual install                   | Required for icon glyphs in Waybar/Rofi
+Font Awesome 6     | fonts-font-awesome / fontawesome-fonts / ttf-font-awesome         | Waybar icon fallback

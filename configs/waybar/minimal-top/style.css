@@ -1,0 +1,42 @@
+/* configs/waybar/minimal-top/style.css */
+/* Minimal top bar — neutral dark theme (override per colour theme) */
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: rgba(26, 27, 38, 0.95);
+    color: #c0caf5;
+}
+
+#workspaces button {
+    padding: 0 6px;
+    color: #565f89;
+    background: transparent;
+}
+
+#workspaces button.focused {
+    color: #7aa2f7;
+    border-bottom: 2px solid #7aa2f7;
+}
+
+#workspaces button:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+#clock,
+#battery,
+#network,
+#pulseaudio,
+#tray {
+    padding: 0 10px;
+    color: #c0caf5;
+}
+
+#battery.warning { color: #e0af68; }
+#battery.critical { color: #f7768e; }
