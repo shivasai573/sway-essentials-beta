@@ -98,6 +98,13 @@ bar {
     swaybar_command waybar
 }
 
+# ── Wayland environment propagation ──────────────────────────────────────────
+# Propagate Sway's runtime env to the systemd user session and D-Bus so that
+# applications launched via desktop files (XDG portals, GNOME apps, etc.) see
+# the correct WAYLAND_DISPLAY and XDG_CURRENT_DESKTOP values.
+exec_always systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+exec_always dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
+
 # ── Autostart ────────────────────────────────────────────────────────────────
 exec_always --no-startup-id {
     # mako           # notification daemon

@@ -58,7 +58,7 @@ _hardware_inject_laptop_input() {
     {
         echo ""
         echo "${marker}"
-        echo "include ${src}"
+        cat "${src}"
     } >> "${_SWAY_CONFIG}"
 
     core_log_info "Injected laptop input config into ${_SWAY_CONFIG}"
