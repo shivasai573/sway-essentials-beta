@@ -1,0 +1,29 @@
+# .gitignore — Sway Essentials
+
+# ── OS artefacts ──────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+Thumbs.db
+ehthumbs.db
+
+# ── Editor / IDE ──────────────────────────────────────────────────────────────
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# ── Shell / script artefacts ──────────────────────────────────────────────────
+*.log
+*.tmp
+
+# ── Local state & temp files ──────────────────────────────────────────────────
+/tmp/
+.env
+.env.local
+
+# ── Wallpapers (user-provided; keep directory via .gitkeep) ───────────────────
+configs/wallpapers/*
+!configs/wallpapers/.gitkeep
