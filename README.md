@@ -48,14 +48,13 @@ The interactive main menu will guide you through available modules.
 
 ---
 
-## Supported Package Managers
+## Supported Distribution
 
-| Distro family | Package manager |
-|---------------|----------------|
-| Arch / Manjaro | `pacman` |
-| Debian / Ubuntu | `apt` |
-| Fedora / RHEL | `dnf` |
-| openSUSE | `zypper` |
+Sway Essentials currently supports **Fedora** only.
+
+| Distro | Package manager |
+|--------|----------------|
+| Fedora | `dnf` |
 
 ---
 
