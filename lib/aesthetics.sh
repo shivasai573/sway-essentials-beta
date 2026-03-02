@@ -35,6 +35,7 @@ module_aesthetics() {
     _aesthetics_install_fonts
     _aesthetics_apply_waybar "${waybar_layout}"
     _aesthetics_apply_rofi   "${rofi_style}"
+    _aesthetics_apply_wayland_env
 
     # Live reload — update the running Sway session immediately
     swaymsg reload >/dev/null 2>&1 || true
@@ -47,6 +48,13 @@ _aesthetics_install_fonts() {
     local font_dir="${HOME}/.local/share/fonts/JetBrainsMono"
     local zip_url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
     local tmp_zip
+
+    # Idempotency: skip download if font files are already present
+    if ls "${font_dir}"/*.ttf >/dev/null 2>&1; then
+        core_log_info "JetBrainsMono Nerd Font already installed; skipping download."
+        return 0
+    fi
+
     tmp_zip="$(mktemp /tmp/JetBrainsMono-XXXXXX.zip)"
 
     core_log_info "Downloading JetBrainsMono Nerd Font…"
@@ -108,4 +116,18 @@ _aesthetics_apply_sway() {
     fi
 
     core_safe_symlink "${src}" "${dest}"
+}
+
+# ── Deploy Wayland environment.d config ──────────────────────────────────────
+_aesthetics_apply_wayland_env() {
+    local src="${CONFIGS_DIR}/environment.d/wayland.conf"
+    local dest="${HOME}/.config/environment.d/wayland.conf"
+
+    if [[ ! -f "${src}" ]]; then
+        core_log_warn "Wayland environment config not found: ${src}"
+        return 0
+    fi
+
+    core_safe_symlink "${src}" "${dest}"
+    core_log_info "Wayland environment variables will be active on next login."
 }

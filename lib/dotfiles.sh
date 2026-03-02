@@ -16,10 +16,17 @@ module_custom_dotfiles() {
     fi
 
     local dry_run=false
-    if ! ui_confirm "Apply dotfiles to home directory? (No = dry-run only)"; then
-        dry_run=true
-        core_log_info "Dry-run mode: files will be listed but not applied."
-    fi
+    local confirm_rc=0
+    ui_confirm "Apply dotfiles to home directory? (No = dry-run only)" || confirm_rc=$?
+    case "${confirm_rc}" in
+        0) ;;  # Yes — apply normally
+        1) dry_run=true
+           core_log_info "Dry-run mode: files will be listed but not applied."
+           ;;
+        *) core_log_info "Dotfiles: cancelled."
+           return 0
+           ;;
+    esac
 
     local tmp_dir
     tmp_dir="$(mktemp -d /tmp/sway-essentials-dotfiles.XXXXXX)"
