@@ -32,7 +32,8 @@
         "format-wifi": " {essid}",
         "format-ethernet": " {ipaddr}",
         "format-disconnected": "⚠",
-        "tooltip-format": "{ifname}: {ipaddr}/{cidr}"
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+        "on-click": "~/.config/rofi-wifi-menu/rofi-wifi-menu.sh"
     },
 
     "pulseaudio": {

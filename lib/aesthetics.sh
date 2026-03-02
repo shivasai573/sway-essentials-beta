@@ -6,6 +6,9 @@
 module_aesthetics() {
     core_log_bold "── Aesthetic Engine ──────────────────────────────────────"
 
+    core_log_info "Installing core UI packages..."
+    packages_install waybar rofi-wayland swaybg fontawesome-fonts curl unzip
+
     # 1) Theme selection
     local theme
     theme="$(ui_choose "Select colour theme:" "Catppuccin" "Nord")" || true
