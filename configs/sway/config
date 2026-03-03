@@ -21,7 +21,6 @@ set $menu rofi -show drun -theme ~/.config/rofi/theme.rasi
 # output HDMI-A-1 resolution 1920x1080 position 0,0
 
 # ── Wallpaper ─────────────────────────────────────────────────────────────────
-output * bg ~/.config/sway/wallpaper fill
 # Machine-local override (written by sway-essentials installer):
 include ~/.config/sway/wallpaper.conf
 
