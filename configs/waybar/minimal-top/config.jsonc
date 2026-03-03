@@ -23,7 +23,7 @@
     "battery": {
         "states": { "warning": 30, "critical": 15 },
         "format": "{icon} {capacity}%",
-        "format-icons": ["", "", "", "", ""]
+        "format-icons": ["", "", "", "", ""]
     },
 
     "network": {
@@ -37,7 +37,7 @@
     "pulseaudio": {
         "format": "{icon} {volume}%",
         "format-muted": " muted",
-        "format-icons": { "default": ["", "", ""] },
+        "format-icons": { "default": ["", "", ""] },
         "on-click": "pavucontrol"
     },
 
