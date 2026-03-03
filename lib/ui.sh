@@ -76,6 +76,5 @@ ui_input() {
     local placeholder="${2:-}"
     gum input \
         --prompt "${prompt} " \
-        --placeholder "${placeholder}" \
-        || true
+        --placeholder "${placeholder}" || true
 }
