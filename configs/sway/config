@@ -14,7 +14,7 @@ font pango:JetBrains Mono 10
 set $term foot
 
 # ── Application launcher ──────────────────────────────────────────────────────
-set $menu rofi -show drun
+set $menu rofi -show drun -theme ~/.config/rofi/theme.rasi
 
 # ── Output (displays) ─────────────────────────────────────────────────────────
 # Uncomment and adjust for your monitor setup:
