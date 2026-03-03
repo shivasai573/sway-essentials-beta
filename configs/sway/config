@@ -21,7 +21,9 @@ set $menu rofi -show drun
 # output HDMI-A-1 resolution 1920x1080 position 0,0
 
 # ── Wallpaper ─────────────────────────────────────────────────────────────────
-# output * bg ~/Pictures/wallpaper.jpg fill
+output * bg ~/.config/sway/wallpaper fill
+# Machine-local override (written by sway-essentials installer):
+include ~/.config/sway/wallpaper.conf
 
 # ── Gaps ──────────────────────────────────────────────────────────────────────
 gaps inner 8

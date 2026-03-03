@@ -32,6 +32,7 @@ module_aesthetics() {
     core_log_info "Applying theme=${theme}, waybar=${waybar_layout}, rofi=${rofi_style}"
 
     _aesthetics_apply_sway
+    _aesthetics_select_wallpaper
     _aesthetics_install_fonts
     _aesthetics_apply_waybar "${waybar_layout}"
     _aesthetics_apply_rofi   "${rofi_style}"
@@ -41,6 +42,53 @@ module_aesthetics() {
     swaymsg reload >/dev/null 2>&1 || true
 
     core_log_info "Aesthetic Engine complete."
+}
+
+# ── Select and deploy wallpaper ───────────────────────────────────────────────
+_aesthetics_select_wallpaper() {
+    local wallpaper_dir="${CONFIGS_DIR}/wallpapers"
+    local dest_dir="${HOME}/.config/sway"
+    local dest_wallpaper="${dest_dir}/wallpaper"
+
+    mkdir -p "${dest_dir}"
+
+    # Collect non-hidden wallpaper files from the wallpapers directory
+    local -a wallpapers=()
+    while IFS= read -r -d '' f; do
+        wallpapers+=("$(basename "${f}")")
+    done < <(find "${wallpaper_dir}" -maxdepth 1 -type f -not -name '.*' -print0 2>/dev/null)
+
+    if [[ ${#wallpapers[@]} -eq 0 ]]; then
+        core_log_warn "No wallpapers found in ${wallpaper_dir}; using solid colour fallback."
+        _aesthetics_set_wallpaper_fallback "${dest_dir}"
+        return 0
+    fi
+
+    local selected
+    selected="$(ui_choose "Select a wallpaper:" "${wallpapers[@]}")" || true
+
+    if [[ -z "${selected}" ]]; then
+        core_log_info "Wallpaper: no selection; using solid colour fallback."
+        _aesthetics_set_wallpaper_fallback "${dest_dir}"
+        return 0
+    fi
+
+    # Strip any path components — ui_choose only returns basenames, but guard
+    # against unexpected values that could traverse outside wallpaper_dir.
+    selected="$(basename "${selected}")"
+
+    cp -f "${wallpaper_dir}/${selected}" "${dest_wallpaper}"
+    # Write the override so wallpaper.conf always wins over the template default.
+    # Quote the path to handle filenames with spaces or special characters.
+    printf 'output * bg "%s" fill\n' "${dest_wallpaper}" > "${dest_dir}/wallpaper.conf"
+    core_log_info "Wallpaper set: ${dest_wallpaper} (${selected})"
+}
+
+# ── Write solid-colour wallpaper fallback ─────────────────────────────────────
+_aesthetics_set_wallpaper_fallback() {
+    local dest_dir="${1:?_aesthetics_set_wallpaper_fallback: dest dir required}"
+    printf 'output * bg #1e1e2e solid_color\n' > "${dest_dir}/wallpaper.conf"
+    core_log_info "Solid colour fallback written to ${dest_dir}/wallpaper.conf"
 }
 
 # ── Install Nerd Fonts (JetBrainsMono) ───────────────────────────────────────
