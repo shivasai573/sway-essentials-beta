@@ -38,7 +38,8 @@ module_aesthetics() {
     _aesthetics_apply_rofi   "${rofi_style}"
     _aesthetics_apply_wayland_env
 
-    # Live reload — update the running Sway session immediately
+    # Live reload — restart Waybar to pick up new fonts, then reload Sway
+    pkill waybar 2>/dev/null || true
     swaymsg reload >/dev/null 2>&1 || true
 
     core_log_info "Aesthetic Engine complete."
@@ -120,7 +121,8 @@ _aesthetics_install_fonts() {
     fi
 
     rm -f "${tmp_zip}"
-    fc-cache -f >/dev/null 2>&1
+    core_log_info "Rebuilding font cache…"
+    fc-cache -f -v
     core_log_info "JetBrainsMono Nerd Font installed to ${font_dir}"
 }
 
