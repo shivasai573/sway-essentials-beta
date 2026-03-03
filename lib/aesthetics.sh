@@ -146,6 +146,7 @@ _aesthetics_apply_rofi() {
     local style="${1:?_aesthetics_apply_rofi: style required}"
     local src="${CONFIGS_DIR}/rofi/${style}.rasi"
     local dest="${HOME}/.config/rofi/${style}.rasi"
+    local theme_link="${HOME}/.config/rofi/theme.rasi"
 
     if [[ ! -f "${src}" ]]; then
         core_log_warn "Rofi theme not found: ${src}"
@@ -153,6 +154,9 @@ _aesthetics_apply_rofi() {
     fi
 
     core_safe_symlink "${src}" "${dest}"
+    # Create a generic theme.rasi symlink so the Sway config can always
+    # reference ~/.config/rofi/theme.rasi regardless of which theme is active.
+    core_safe_symlink "${src}" "${theme_link}"
 }
 
 # ── Deploy Sway master config ─────────────────────────────────────────────────
