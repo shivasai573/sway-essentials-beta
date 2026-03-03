@@ -20,7 +20,7 @@ ui_main_menu() {
         --header "✦ Sway Essentials — Main Menu" \
         --header.foreground="212" \
         --cursor.foreground="212" \
-        "$@" 2>/dev/null || true
+        "$@" || true
 }
 
 # ── Single-choice selection ───────────────────────────────────────────────────
@@ -32,7 +32,7 @@ ui_choose() {
     gum choose \
         --header "${header}" \
         --cursor.foreground="212" \
-        "$@" 2>/dev/null || true
+        "$@" || true
 }
 
 # ── Multi-select ─────────────────────────────────────────────────────────────
@@ -46,7 +46,7 @@ ui_multiselect() {
         --no-limit \
         --header "${header}" \
         --cursor.foreground="212" \
-        "$@" 2>/dev/null || true
+        "$@" || true
 }
 
 # ── Confirm prompt ────────────────────────────────────────────────────────────
@@ -55,7 +55,7 @@ ui_multiselect() {
 ui_confirm() {
     _ui_require_gum
     local prompt="${1:-Are you sure?}"
-    gum confirm "${prompt}" 2>/dev/null
+    gum confirm "${prompt}"
 }
 
 # ── Spinner execution helper ──────────────────────────────────────────────────
@@ -77,5 +77,5 @@ ui_input() {
     gum input \
         --prompt "${prompt} " \
         --placeholder "${placeholder}" \
-        2>/dev/null || true
+        || true
 }

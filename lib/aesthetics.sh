@@ -7,7 +7,7 @@ module_aesthetics() {
     core_log_bold "── Aesthetic Engine ──────────────────────────────────────"
 
     core_log_info "Installing core UI packages..."
-    packages_install waybar rofi-wayland swaybg fontawesome-fonts curl unzip
+    packages_install waybar rofi-wayland swaybg fontawesome-fonts curl unzip grim slurp wl-clipboard brightnessctl
 
     # 1) Theme selection
     local theme
